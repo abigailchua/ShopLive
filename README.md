@@ -1,1 +1,1 @@
-4. Create Git Repository
+docker-compose up to run
