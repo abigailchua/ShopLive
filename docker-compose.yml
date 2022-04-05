@@ -1,0 +1,104 @@
+version: "3.8"
+ 
+services:
+  seed:
+    container_name: seedservice
+    image: seedservice:1.0.0
+    restart: always
+    build: 
+      context: seed
+      target: production
+      dockerfile: Dockerfile
+    environment:
+      - JWT_SECRET=somethingsecret
+      - MONGODB_URI_LOCAL=mongodb+srv://amazona:amazonapassword@cluster0.k5cms.mongodb.net/amazona?retryWrites=true&w=majority
+      - MONGODB_URI=mongodb+srv://mern-amazona:amazonapassword@cluster0.k5cms.mongodb.net/mern-amazona-db?retryWrites=true&w=majority
+      - PAYPAL_CLIENT_ID=Af1iCE4okwz4u-phLxEhZceIoZgM45A8vOYsjR9H1cLqjDyiPsIjitYvOAy4dUKZSDbx6LFxuCSulVzc
+    ports:
+      - 5002:5002
+    networks:
+      production:
+        ipv4_address: 172.50.1.31
+
+      
+  orders:
+    container_name: orderservice
+    image: orderservice:1.0.0
+    restart: always
+    build: 
+      context: orders
+      target: production
+      dockerfile: Dockerfile
+    environment:
+      - JWT_SECRET=somethingsecret
+      - MONGODB_URI=mongodb+srv://Jerdwut:0898948455Za@cluster0.v2rei.mongodb.net/Orders?retryWrites=true&w=majority
+      - PAYPAL_CLIENT_ID=Af1iCE4okwz4u-phLxEhZceIoZgM45A8vOYsjR9H1cLqjDyiPsIjitYvOAy4dUKZSDbx6LFxuCSulVzc
+    ports:
+      - 5003:5003
+    networks:
+      production:
+        ipv4_address: 172.50.1.32
+
+  products:
+    container_name: productservice
+    image: productservice:1.0.0
+    restart: always
+    build: 
+      context: products
+      target: production
+      dockerfile: Dockerfile
+    environment:
+      - JWT_SECRET=somethingsecret
+      - MONGODB_URI_LOCAL=mongodb+srv://amazona:amazonapassword@cluster0.k5cms.mongodb.net/amazona?retryWrites=true&w=majority
+      - MONGODB_URI=mongodb+srv://mern-amazona:amazonapassword@cluster0.k5cms.mongodb.net/mern-amazona-db?retryWrites=true&w=majority
+      - PAYPAL_CLIENT_ID=Af1iCE4okwz4u-phLxEhZceIoZgM45A8vOYsjR9H1cLqjDyiPsIjitYvOAy4dUKZSDbx6LFxuCSulVzc
+    ports:
+      - 5004:5004
+    networks:
+      production:
+        ipv4_address: 172.50.1.33
+
+  users:
+    container_name: userservice
+    image: userservice:1.0.0
+    restart: always
+    build: 
+      context: users
+      target: production
+      dockerfile: Dockerfile
+    environment:
+      - JWT_SECRET=somethingsecret
+      - MONGODB_URI=mongodb+srv://abigailchua:Abby123!@cluster0.oopbv.mongodb.net/abigailchua?retryWrites=true&w=majority
+      - PAYPAL_CLIENT_ID=Af1iCE4okwz4u-phLxEhZceIoZgM45A8vOYsjR9H1cLqjDyiPsIjitYvOAy4dUKZSDbx6LFxuCSulVzc
+    ports:
+      - 5005:5005
+    networks:
+      production:
+        ipv4_address: 172.50.1.34
+
+
+  frontend:
+    container_name: frontendservice
+    image: frontendservice:1.0.0
+    restart: always
+    build: 
+      context: frontend
+      target: production
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    depends_on:
+      - seed
+      - orders
+      - products
+      - users
+    networks:
+      production:
+        ipv4_address: 172.50.1.35
+
+networks:
+  production:
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.50.0.0/16
