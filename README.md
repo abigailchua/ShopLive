@@ -1,1 +1,1 @@
-docker-compose up to run
+"docker-compose up" to run
